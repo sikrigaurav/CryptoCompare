@@ -13,12 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import com.crypto.compare.cryptoCurrency.interfaces.HibernateConnection;
+import com.crypto.compare.cryptoCurrency.Dao.HibernateDao;
+import com.crypto.compare.cryptoCurrency.DaoImpl.HibernateDaoImpl;
 import com.crypto.compare.cryptoCurrency.model.Currency;
 
 @RestController
 @RequestMapping("/crypto")
-public class CryptoComparator implements HibernateConnection{
+public class CryptoComparator{
+	
+	@Autowired
+	HibernateDao hib;
 	
 	@Autowired
 	private WebClient.Builder builder;
@@ -47,7 +51,8 @@ public class CryptoComparator implements HibernateConnection{
 									.bodyToMono(Currency[].class)
 									.block();
 			
-			Session session = getSession(Currency.class);
+			
+			Session session = hib.getSession(Currency.class);
 			session.beginTransaction();
 			for(int i = 0; i< currencies.length; i++)
 			{
@@ -71,14 +76,6 @@ public class CryptoComparator implements HibernateConnection{
 	public String formUrl(String currName)
 	{
 		return url+"?vs_currency="+currName;
-	}
-
-	@Override
-	public Session getSession(Class c) {
-		Configuration config = new Configuration().configure().addAnnotatedClass(c);
-		SessionFactory sf = config.buildSessionFactory();
-		Session session = sf.openSession();	
-		return session;
 	}
 
 }
