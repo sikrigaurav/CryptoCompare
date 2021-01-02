@@ -8,12 +8,6 @@ import org.springframework.context.annotation.Bean;
 import com.crypto.compare.cryptoCurrency.Dao.HibernateDao;
 
 public class HibernateDaoImpl implements HibernateDao {
-
-	@Bean
-	public HibernateDaoImpl getHibernateDaoObject()
-	{
-		return new HibernateDaoImpl();
-	}
 	
 	@Override
 	public Session getSession(Class c) {
